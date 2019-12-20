@@ -1,0 +1,1594 @@
+
+SPI2.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000092a  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000018  00800060  0000092a  000009be  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000003  00800078  00800078  000009d6  2**0
+                  ALLOC
+  3 .stab         000010d4  00000000  00000000  000009d8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      0000099d  00000000  00000000  00001aac  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   8:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+   c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  10:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  14:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  18:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  1c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  20:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  24:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  28:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  2c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  30:	0c 94 49 00 	jmp	0x92	; 0x92 <__vector_12>
+  34:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  38:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  3c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  40:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  44:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  48:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  4c:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+  50:	0c 94 47 00 	jmp	0x8e	; 0x8e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	ea e2       	ldi	r30, 0x2A	; 42
+  68:	f9 e0       	ldi	r31, 0x09	; 9
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <.do_copy_data_start>
+
+0000006c <.do_copy_data_loop>:
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+
+00000070 <.do_copy_data_start>:
+  70:	a8 37       	cpi	r26, 0x78	; 120
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <.do_copy_data_loop>
+
+00000076 <__do_clear_bss>:
+  76:	10 e0       	ldi	r17, 0x00	; 0
+  78:	a8 e7       	ldi	r26, 0x78	; 120
+  7a:	b0 e0       	ldi	r27, 0x00	; 0
+  7c:	01 c0       	rjmp	.+2      	; 0x80 <.do_clear_bss_start>
+
+0000007e <.do_clear_bss_loop>:
+  7e:	1d 92       	st	X+, r1
+
+00000080 <.do_clear_bss_start>:
+  80:	ab 37       	cpi	r26, 0x7B	; 123
+  82:	b1 07       	cpc	r27, r17
+  84:	e1 f7       	brne	.-8      	; 0x7e <.do_clear_bss_loop>
+  86:	0e 94 64 04 	call	0x8c8	; 0x8c8 <main>
+  8a:	0c 94 93 04 	jmp	0x926	; 0x926 <_exit>
+
+0000008e <__bad_interrupt>:
+  8e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000092 <__vector_12>:
+
+/********** global flag for receive interrupt*****************************/
+static uint8_t gu8_flag =0;
+
+void __vector_12()
+{
+  92:	df 93       	push	r29
+  94:	cf 93       	push	r28
+  96:	cd b7       	in	r28, 0x3d	; 61
+  98:	de b7       	in	r29, 0x3e	; 62
+	gu8_flag =1;
+  9a:	81 e0       	ldi	r24, 0x01	; 1
+  9c:	80 93 78 00 	sts	0x0078, r24
+	CLEAR_BIT(SPCR,SPIE);
+  a0:	ad e2       	ldi	r26, 0x2D	; 45
+  a2:	b0 e0       	ldi	r27, 0x00	; 0
+  a4:	ed e2       	ldi	r30, 0x2D	; 45
+  a6:	f0 e0       	ldi	r31, 0x00	; 0
+  a8:	80 81       	ld	r24, Z
+  aa:	8f 77       	andi	r24, 0x7F	; 127
+  ac:	8c 93       	st	X, r24
+}
+  ae:	cf 91       	pop	r28
+  b0:	df 91       	pop	r29
+  b2:	08 95       	ret
+
+000000b4 <SPI_init>:
+ * @return: returns error status
+ * Description: Function to initialize SPI
+ **************************************************************************/
+
+uint8_t SPI_init(SPI_Cfg_s *cfg)
+{
+  b4:	df 93       	push	r29
+  b6:	cf 93       	push	r28
+  b8:	00 d0       	rcall	.+0      	; 0xba <SPI_init+0x6>
+  ba:	0f 92       	push	r0
+  bc:	cd b7       	in	r28, 0x3d	; 61
+  be:	de b7       	in	r29, 0x3e	; 62
+  c0:	9b 83       	std	Y+3, r25	; 0x03
+  c2:	8a 83       	std	Y+2, r24	; 0x02
+	uint8_t status=ERROR_OK;
+  c4:	19 82       	std	Y+1, r1	; 0x01
+	if (SPI_ENABLE ==cfg->SPI_Enable)
+  c6:	ea 81       	ldd	r30, Y+2	; 0x02
+  c8:	fb 81       	ldd	r31, Y+3	; 0x03
+  ca:	86 81       	ldd	r24, Z+6	; 0x06
+  cc:	81 30       	cpi	r24, 0x01	; 1
+  ce:	09 f0       	breq	.+2      	; 0xd2 <SPI_init+0x1e>
+  d0:	4d c1       	rjmp	.+666    	; 0x36c <SPI_init+0x2b8>
+	{
+		if (MASTERMODE == cfg->SPI_Mode)
+  d2:	ea 81       	ldd	r30, Y+2	; 0x02
+  d4:	fb 81       	ldd	r31, Y+3	; 0x03
+  d6:	82 81       	ldd	r24, Z+2	; 0x02
+  d8:	81 30       	cpi	r24, 0x01	; 1
+  da:	09 f0       	breq	.+2      	; 0xde <SPI_init+0x2a>
+  dc:	a9 c0       	rjmp	.+338    	; 0x230 <SPI_init+0x17c>
+		{
+			SET_BIT(SPCR,MSTR);
+  de:	ad e2       	ldi	r26, 0x2D	; 45
+  e0:	b0 e0       	ldi	r27, 0x00	; 0
+  e2:	ed e2       	ldi	r30, 0x2D	; 45
+  e4:	f0 e0       	ldi	r31, 0x00	; 0
+  e6:	80 81       	ld	r24, Z
+  e8:	80 61       	ori	r24, 0x10	; 16
+  ea:	8c 93       	st	X, r24
+			if (cfg->Pre_Scaller >=0 && cfg->Pre_Scaller <4)
+  ec:	ea 81       	ldd	r30, Y+2	; 0x02
+  ee:	fb 81       	ldd	r31, Y+3	; 0x03
+  f0:	80 81       	ld	r24, Z
+  f2:	84 30       	cpi	r24, 0x04	; 4
+  f4:	08 f0       	brcs	.+2      	; 0xf8 <SPI_init+0x44>
+  f6:	99 c0       	rjmp	.+306    	; 0x22a <SPI_init+0x176>
+			{
+				SPCR= (SPCR & 0xFC) | cfg->Pre_Scaller;
+  f8:	ad e2       	ldi	r26, 0x2D	; 45
+  fa:	b0 e0       	ldi	r27, 0x00	; 0
+  fc:	ed e2       	ldi	r30, 0x2D	; 45
+  fe:	f0 e0       	ldi	r31, 0x00	; 0
+ 100:	80 81       	ld	r24, Z
+ 102:	98 2f       	mov	r25, r24
+ 104:	9c 7f       	andi	r25, 0xFC	; 252
+ 106:	ea 81       	ldd	r30, Y+2	; 0x02
+ 108:	fb 81       	ldd	r31, Y+3	; 0x03
+ 10a:	80 81       	ld	r24, Z
+ 10c:	89 2b       	or	r24, r25
+ 10e:	8c 93       	st	X, r24
+				if (DOUBLE_SPEED_MODE == cfg->Speed_Mode)
+ 110:	ea 81       	ldd	r30, Y+2	; 0x02
+ 112:	fb 81       	ldd	r31, Y+3	; 0x03
+ 114:	81 81       	ldd	r24, Z+1	; 0x01
+ 116:	81 30       	cpi	r24, 0x01	; 1
+ 118:	41 f4       	brne	.+16     	; 0x12a <SPI_init+0x76>
+				{
+					SET_BIT(SPSR,SPI2X);
+ 11a:	ae e2       	ldi	r26, 0x2E	; 46
+ 11c:	b0 e0       	ldi	r27, 0x00	; 0
+ 11e:	ee e2       	ldi	r30, 0x2E	; 46
+ 120:	f0 e0       	ldi	r31, 0x00	; 0
+ 122:	80 81       	ld	r24, Z
+ 124:	81 60       	ori	r24, 0x01	; 1
+ 126:	8c 93       	st	X, r24
+ 128:	07 c0       	rjmp	.+14     	; 0x138 <SPI_init+0x84>
+				}
+				else
+				{
+					CLEAR_BIT(SPSR,SPI2X);
+ 12a:	ae e2       	ldi	r26, 0x2E	; 46
+ 12c:	b0 e0       	ldi	r27, 0x00	; 0
+ 12e:	ee e2       	ldi	r30, 0x2E	; 46
+ 130:	f0 e0       	ldi	r31, 0x00	; 0
+ 132:	80 81       	ld	r24, Z
+ 134:	8e 7f       	andi	r24, 0xFE	; 254
+ 136:	8c 93       	st	X, r24
+				}
+				if (DATA_ORDER_LSB == cfg->Data_Order)
+ 138:	ea 81       	ldd	r30, Y+2	; 0x02
+ 13a:	fb 81       	ldd	r31, Y+3	; 0x03
+ 13c:	87 81       	ldd	r24, Z+7	; 0x07
+ 13e:	81 30       	cpi	r24, 0x01	; 1
+ 140:	41 f4       	brne	.+16     	; 0x152 <SPI_init+0x9e>
+				{
+					SET_BIT(SPCR,DORD);
+ 142:	ad e2       	ldi	r26, 0x2D	; 45
+ 144:	b0 e0       	ldi	r27, 0x00	; 0
+ 146:	ed e2       	ldi	r30, 0x2D	; 45
+ 148:	f0 e0       	ldi	r31, 0x00	; 0
+ 14a:	80 81       	ld	r24, Z
+ 14c:	80 62       	ori	r24, 0x20	; 32
+ 14e:	8c 93       	st	X, r24
+ 150:	07 c0       	rjmp	.+14     	; 0x160 <SPI_init+0xac>
+				}
+				else
+				{
+					CLEAR_BIT(SPCR,DORD);
+ 152:	ad e2       	ldi	r26, 0x2D	; 45
+ 154:	b0 e0       	ldi	r27, 0x00	; 0
+ 156:	ed e2       	ldi	r30, 0x2D	; 45
+ 158:	f0 e0       	ldi	r31, 0x00	; 0
+ 15a:	80 81       	ld	r24, Z
+ 15c:	8f 7d       	andi	r24, 0xDF	; 223
+ 15e:	8c 93       	st	X, r24
+				}
+				if (SPI_INTERRUPT == cfg->Interrupt_Mode)
+ 160:	ea 81       	ldd	r30, Y+2	; 0x02
+ 162:	fb 81       	ldd	r31, Y+3	; 0x03
+ 164:	83 81       	ldd	r24, Z+3	; 0x03
+ 166:	81 30       	cpi	r24, 0x01	; 1
+ 168:	69 f4       	brne	.+26     	; 0x184 <SPI_init+0xd0>
+				{
+					SET_BIT(SREG,I);
+ 16a:	af e5       	ldi	r26, 0x5F	; 95
+ 16c:	b0 e0       	ldi	r27, 0x00	; 0
+ 16e:	ef e5       	ldi	r30, 0x5F	; 95
+ 170:	f0 e0       	ldi	r31, 0x00	; 0
+ 172:	80 81       	ld	r24, Z
+ 174:	80 68       	ori	r24, 0x80	; 128
+ 176:	8c 93       	st	X, r24
+					gu8_Int = cfg->Interrupt_Mode;
+ 178:	ea 81       	ldd	r30, Y+2	; 0x02
+ 17a:	fb 81       	ldd	r31, Y+3	; 0x03
+ 17c:	83 81       	ldd	r24, Z+3	; 0x03
+ 17e:	80 93 79 00 	sts	0x0079, r24
+ 182:	13 c0       	rjmp	.+38     	; 0x1aa <SPI_init+0xf6>
+				}
+				else
+				{
+					CLEAR_BIT(SREG,I);
+ 184:	af e5       	ldi	r26, 0x5F	; 95
+ 186:	b0 e0       	ldi	r27, 0x00	; 0
+ 188:	ef e5       	ldi	r30, 0x5F	; 95
+ 18a:	f0 e0       	ldi	r31, 0x00	; 0
+ 18c:	80 81       	ld	r24, Z
+ 18e:	8f 77       	andi	r24, 0x7F	; 127
+ 190:	8c 93       	st	X, r24
+					CLEAR_BIT(SPCR,SPIE);
+ 192:	ad e2       	ldi	r26, 0x2D	; 45
+ 194:	b0 e0       	ldi	r27, 0x00	; 0
+ 196:	ed e2       	ldi	r30, 0x2D	; 45
+ 198:	f0 e0       	ldi	r31, 0x00	; 0
+ 19a:	80 81       	ld	r24, Z
+ 19c:	8f 77       	andi	r24, 0x7F	; 127
+ 19e:	8c 93       	st	X, r24
+					gu8_Int = cfg->Interrupt_Mode;
+ 1a0:	ea 81       	ldd	r30, Y+2	; 0x02
+ 1a2:	fb 81       	ldd	r31, Y+3	; 0x03
+ 1a4:	83 81       	ldd	r24, Z+3	; 0x03
+ 1a6:	80 93 79 00 	sts	0x0079, r24
+				}
+				if (CLOCK_POLARITY_HIGH == cfg->Polarity_Mode)
+ 1aa:	ea 81       	ldd	r30, Y+2	; 0x02
+ 1ac:	fb 81       	ldd	r31, Y+3	; 0x03
+ 1ae:	84 81       	ldd	r24, Z+4	; 0x04
+ 1b0:	81 30       	cpi	r24, 0x01	; 1
+ 1b2:	41 f4       	brne	.+16     	; 0x1c4 <SPI_init+0x110>
+				{
+					SET_BIT(SPCR,CPOL);
+ 1b4:	ad e2       	ldi	r26, 0x2D	; 45
+ 1b6:	b0 e0       	ldi	r27, 0x00	; 0
+ 1b8:	ed e2       	ldi	r30, 0x2D	; 45
+ 1ba:	f0 e0       	ldi	r31, 0x00	; 0
+ 1bc:	80 81       	ld	r24, Z
+ 1be:	88 60       	ori	r24, 0x08	; 8
+ 1c0:	8c 93       	st	X, r24
+ 1c2:	07 c0       	rjmp	.+14     	; 0x1d2 <SPI_init+0x11e>
+				}
+				else
+				{
+					CLEAR_BIT(SPCR,CPOL);
+ 1c4:	ad e2       	ldi	r26, 0x2D	; 45
+ 1c6:	b0 e0       	ldi	r27, 0x00	; 0
+ 1c8:	ed e2       	ldi	r30, 0x2D	; 45
+ 1ca:	f0 e0       	ldi	r31, 0x00	; 0
+ 1cc:	80 81       	ld	r24, Z
+ 1ce:	87 7f       	andi	r24, 0xF7	; 247
+ 1d0:	8c 93       	st	X, r24
+				}
+				if (SAMPLING_EDGE_TRAIL == cfg->Phase_Mode)
+ 1d2:	ea 81       	ldd	r30, Y+2	; 0x02
+ 1d4:	fb 81       	ldd	r31, Y+3	; 0x03
+ 1d6:	85 81       	ldd	r24, Z+5	; 0x05
+ 1d8:	81 30       	cpi	r24, 0x01	; 1
+ 1da:	41 f4       	brne	.+16     	; 0x1ec <SPI_init+0x138>
+				{
+					SET_BIT(SPCR,CPHA);
+ 1dc:	ad e2       	ldi	r26, 0x2D	; 45
+ 1de:	b0 e0       	ldi	r27, 0x00	; 0
+ 1e0:	ed e2       	ldi	r30, 0x2D	; 45
+ 1e2:	f0 e0       	ldi	r31, 0x00	; 0
+ 1e4:	80 81       	ld	r24, Z
+ 1e6:	84 60       	ori	r24, 0x04	; 4
+ 1e8:	8c 93       	st	X, r24
+ 1ea:	07 c0       	rjmp	.+14     	; 0x1fa <SPI_init+0x146>
+				}
+				else
+				{
+					CLEAR_BIT(SPCR,CPHA);
+ 1ec:	ad e2       	ldi	r26, 0x2D	; 45
+ 1ee:	b0 e0       	ldi	r27, 0x00	; 0
+ 1f0:	ed e2       	ldi	r30, 0x2D	; 45
+ 1f2:	f0 e0       	ldi	r31, 0x00	; 0
+ 1f4:	80 81       	ld	r24, Z
+ 1f6:	8b 7f       	andi	r24, 0xFB	; 251
+ 1f8:	8c 93       	st	X, r24
+				}
+				DIO_Init_Pin(PB4,HIGH);
+ 1fa:	8c e0       	ldi	r24, 0x0C	; 12
+ 1fc:	61 e0       	ldi	r22, 0x01	; 1
+ 1fe:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+				DIO_Init_Pin(PB5,HIGH);
+ 202:	8d e0       	ldi	r24, 0x0D	; 13
+ 204:	61 e0       	ldi	r22, 0x01	; 1
+ 206:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+				DIO_Init_Pin(PB6,LOW);
+ 20a:	8e e0       	ldi	r24, 0x0E	; 14
+ 20c:	60 e0       	ldi	r22, 0x00	; 0
+ 20e:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+				DIO_Init_Pin(PB7,HIGH);
+ 212:	8f e0       	ldi	r24, 0x0F	; 15
+ 214:	61 e0       	ldi	r22, 0x01	; 1
+ 216:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+				SET_BIT(SPCR,SPE);
+ 21a:	ad e2       	ldi	r26, 0x2D	; 45
+ 21c:	b0 e0       	ldi	r27, 0x00	; 0
+ 21e:	ed e2       	ldi	r30, 0x2D	; 45
+ 220:	f0 e0       	ldi	r31, 0x00	; 0
+ 222:	80 81       	ld	r24, Z
+ 224:	80 64       	ori	r24, 0x40	; 64
+ 226:	8c 93       	st	X, r24
+ 228:	99 c0       	rjmp	.+306    	; 0x35c <SPI_init+0x2a8>
+			}
+			else
+			{
+				status = ERROR_NOK;
+ 22a:	81 e0       	ldi	r24, 0x01	; 1
+ 22c:	89 83       	std	Y+1, r24	; 0x01
+ 22e:	96 c0       	rjmp	.+300    	; 0x35c <SPI_init+0x2a8>
+			}
+		}
+		else if (SLAVEMODE == cfg->SPI_Mode)
+ 230:	ea 81       	ldd	r30, Y+2	; 0x02
+ 232:	fb 81       	ldd	r31, Y+3	; 0x03
+ 234:	82 81       	ldd	r24, Z+2	; 0x02
+ 236:	88 23       	and	r24, r24
+ 238:	09 f0       	breq	.+2      	; 0x23c <SPI_init+0x188>
+ 23a:	8e c0       	rjmp	.+284    	; 0x358 <SPI_init+0x2a4>
+		{
+			CLEAR_BIT(SPCR,MSTR);
+ 23c:	ad e2       	ldi	r26, 0x2D	; 45
+ 23e:	b0 e0       	ldi	r27, 0x00	; 0
+ 240:	ed e2       	ldi	r30, 0x2D	; 45
+ 242:	f0 e0       	ldi	r31, 0x00	; 0
+ 244:	80 81       	ld	r24, Z
+ 246:	8f 7e       	andi	r24, 0xEF	; 239
+ 248:	8c 93       	st	X, r24
+			CLEAR_BIT(SPSR,SPI2X);
+ 24a:	ae e2       	ldi	r26, 0x2E	; 46
+ 24c:	b0 e0       	ldi	r27, 0x00	; 0
+ 24e:	ee e2       	ldi	r30, 0x2E	; 46
+ 250:	f0 e0       	ldi	r31, 0x00	; 0
+ 252:	80 81       	ld	r24, Z
+ 254:	8e 7f       	andi	r24, 0xFE	; 254
+ 256:	8c 93       	st	X, r24
+			CLEAR_BIT(SPCR,SPR0);
+ 258:	ad e2       	ldi	r26, 0x2D	; 45
+ 25a:	b0 e0       	ldi	r27, 0x00	; 0
+ 25c:	ed e2       	ldi	r30, 0x2D	; 45
+ 25e:	f0 e0       	ldi	r31, 0x00	; 0
+ 260:	80 81       	ld	r24, Z
+ 262:	8e 7f       	andi	r24, 0xFE	; 254
+ 264:	8c 93       	st	X, r24
+			CLEAR_BIT(SPCR,SPR1);
+ 266:	ad e2       	ldi	r26, 0x2D	; 45
+ 268:	b0 e0       	ldi	r27, 0x00	; 0
+ 26a:	ed e2       	ldi	r30, 0x2D	; 45
+ 26c:	f0 e0       	ldi	r31, 0x00	; 0
+ 26e:	80 81       	ld	r24, Z
+ 270:	8d 7f       	andi	r24, 0xFD	; 253
+ 272:	8c 93       	st	X, r24
+			DIO_Init_Pin(PB4,LOW);
+ 274:	8c e0       	ldi	r24, 0x0C	; 12
+ 276:	60 e0       	ldi	r22, 0x00	; 0
+ 278:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+			DIO_Init_Pin(PB5,LOW);
+ 27c:	8d e0       	ldi	r24, 0x0D	; 13
+ 27e:	60 e0       	ldi	r22, 0x00	; 0
+ 280:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+			DIO_Init_Pin(PB6,HIGH);
+ 284:	8e e0       	ldi	r24, 0x0E	; 14
+ 286:	61 e0       	ldi	r22, 0x01	; 1
+ 288:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+			DIO_Init_Pin(PB7,LOW);
+ 28c:	8f e0       	ldi	r24, 0x0F	; 15
+ 28e:	60 e0       	ldi	r22, 0x00	; 0
+ 290:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+			if (DATA_ORDER_LSB == cfg->Data_Order)
+ 294:	ea 81       	ldd	r30, Y+2	; 0x02
+ 296:	fb 81       	ldd	r31, Y+3	; 0x03
+ 298:	87 81       	ldd	r24, Z+7	; 0x07
+ 29a:	81 30       	cpi	r24, 0x01	; 1
+ 29c:	41 f4       	brne	.+16     	; 0x2ae <SPI_init+0x1fa>
+			{
+				SET_BIT(SPCR,DORD);
+ 29e:	ad e2       	ldi	r26, 0x2D	; 45
+ 2a0:	b0 e0       	ldi	r27, 0x00	; 0
+ 2a2:	ed e2       	ldi	r30, 0x2D	; 45
+ 2a4:	f0 e0       	ldi	r31, 0x00	; 0
+ 2a6:	80 81       	ld	r24, Z
+ 2a8:	80 62       	ori	r24, 0x20	; 32
+ 2aa:	8c 93       	st	X, r24
+ 2ac:	07 c0       	rjmp	.+14     	; 0x2bc <SPI_init+0x208>
+			}
+			else
+			{
+				CLEAR_BIT(SPCR,DORD);
+ 2ae:	ad e2       	ldi	r26, 0x2D	; 45
+ 2b0:	b0 e0       	ldi	r27, 0x00	; 0
+ 2b2:	ed e2       	ldi	r30, 0x2D	; 45
+ 2b4:	f0 e0       	ldi	r31, 0x00	; 0
+ 2b6:	80 81       	ld	r24, Z
+ 2b8:	8f 7d       	andi	r24, 0xDF	; 223
+ 2ba:	8c 93       	st	X, r24
+			}
+			if (SPI_INTERRUPT == cfg->Interrupt_Mode)
+ 2bc:	ea 81       	ldd	r30, Y+2	; 0x02
+ 2be:	fb 81       	ldd	r31, Y+3	; 0x03
+ 2c0:	83 81       	ldd	r24, Z+3	; 0x03
+ 2c2:	81 30       	cpi	r24, 0x01	; 1
+ 2c4:	69 f4       	brne	.+26     	; 0x2e0 <SPI_init+0x22c>
+			{
+				SET_BIT(SREG,I);
+ 2c6:	af e5       	ldi	r26, 0x5F	; 95
+ 2c8:	b0 e0       	ldi	r27, 0x00	; 0
+ 2ca:	ef e5       	ldi	r30, 0x5F	; 95
+ 2cc:	f0 e0       	ldi	r31, 0x00	; 0
+ 2ce:	80 81       	ld	r24, Z
+ 2d0:	80 68       	ori	r24, 0x80	; 128
+ 2d2:	8c 93       	st	X, r24
+				gu8_Int = cfg->Interrupt_Mode;
+ 2d4:	ea 81       	ldd	r30, Y+2	; 0x02
+ 2d6:	fb 81       	ldd	r31, Y+3	; 0x03
+ 2d8:	83 81       	ldd	r24, Z+3	; 0x03
+ 2da:	80 93 79 00 	sts	0x0079, r24
+ 2de:	13 c0       	rjmp	.+38     	; 0x306 <SPI_init+0x252>
+			}
+			else
+			{
+				CLEAR_BIT(SREG,I);
+ 2e0:	af e5       	ldi	r26, 0x5F	; 95
+ 2e2:	b0 e0       	ldi	r27, 0x00	; 0
+ 2e4:	ef e5       	ldi	r30, 0x5F	; 95
+ 2e6:	f0 e0       	ldi	r31, 0x00	; 0
+ 2e8:	80 81       	ld	r24, Z
+ 2ea:	8f 77       	andi	r24, 0x7F	; 127
+ 2ec:	8c 93       	st	X, r24
+				CLEAR_BIT(SPCR,SPIE);
+ 2ee:	ad e2       	ldi	r26, 0x2D	; 45
+ 2f0:	b0 e0       	ldi	r27, 0x00	; 0
+ 2f2:	ed e2       	ldi	r30, 0x2D	; 45
+ 2f4:	f0 e0       	ldi	r31, 0x00	; 0
+ 2f6:	80 81       	ld	r24, Z
+ 2f8:	8f 77       	andi	r24, 0x7F	; 127
+ 2fa:	8c 93       	st	X, r24
+				gu8_Int = cfg->Interrupt_Mode;
+ 2fc:	ea 81       	ldd	r30, Y+2	; 0x02
+ 2fe:	fb 81       	ldd	r31, Y+3	; 0x03
+ 300:	83 81       	ldd	r24, Z+3	; 0x03
+ 302:	80 93 79 00 	sts	0x0079, r24
+			}
+			if (CLOCK_POLARITY_HIGH == cfg->Polarity_Mode)
+ 306:	ea 81       	ldd	r30, Y+2	; 0x02
+ 308:	fb 81       	ldd	r31, Y+3	; 0x03
+ 30a:	84 81       	ldd	r24, Z+4	; 0x04
+ 30c:	81 30       	cpi	r24, 0x01	; 1
+ 30e:	41 f4       	brne	.+16     	; 0x320 <SPI_init+0x26c>
+			{
+				SET_BIT(SPCR,CPOL);
+ 310:	ad e2       	ldi	r26, 0x2D	; 45
+ 312:	b0 e0       	ldi	r27, 0x00	; 0
+ 314:	ed e2       	ldi	r30, 0x2D	; 45
+ 316:	f0 e0       	ldi	r31, 0x00	; 0
+ 318:	80 81       	ld	r24, Z
+ 31a:	88 60       	ori	r24, 0x08	; 8
+ 31c:	8c 93       	st	X, r24
+ 31e:	07 c0       	rjmp	.+14     	; 0x32e <SPI_init+0x27a>
+			}
+			else
+			{
+				CLEAR_BIT(SPCR,CPOL);
+ 320:	ad e2       	ldi	r26, 0x2D	; 45
+ 322:	b0 e0       	ldi	r27, 0x00	; 0
+ 324:	ed e2       	ldi	r30, 0x2D	; 45
+ 326:	f0 e0       	ldi	r31, 0x00	; 0
+ 328:	80 81       	ld	r24, Z
+ 32a:	87 7f       	andi	r24, 0xF7	; 247
+ 32c:	8c 93       	st	X, r24
+			}
+			if (SAMPLING_EDGE_TRAIL == cfg->Phase_Mode)
+ 32e:	ea 81       	ldd	r30, Y+2	; 0x02
+ 330:	fb 81       	ldd	r31, Y+3	; 0x03
+ 332:	85 81       	ldd	r24, Z+5	; 0x05
+ 334:	81 30       	cpi	r24, 0x01	; 1
+ 336:	41 f4       	brne	.+16     	; 0x348 <SPI_init+0x294>
+			{
+				SET_BIT(SPCR,CPHA);
+ 338:	ad e2       	ldi	r26, 0x2D	; 45
+ 33a:	b0 e0       	ldi	r27, 0x00	; 0
+ 33c:	ed e2       	ldi	r30, 0x2D	; 45
+ 33e:	f0 e0       	ldi	r31, 0x00	; 0
+ 340:	80 81       	ld	r24, Z
+ 342:	84 60       	ori	r24, 0x04	; 4
+ 344:	8c 93       	st	X, r24
+ 346:	0a c0       	rjmp	.+20     	; 0x35c <SPI_init+0x2a8>
+			}
+			else
+			{
+				CLEAR_BIT(SPCR,CPHA);
+ 348:	ad e2       	ldi	r26, 0x2D	; 45
+ 34a:	b0 e0       	ldi	r27, 0x00	; 0
+ 34c:	ed e2       	ldi	r30, 0x2D	; 45
+ 34e:	f0 e0       	ldi	r31, 0x00	; 0
+ 350:	80 81       	ld	r24, Z
+ 352:	8b 7f       	andi	r24, 0xFB	; 251
+ 354:	8c 93       	st	X, r24
+ 356:	02 c0       	rjmp	.+4      	; 0x35c <SPI_init+0x2a8>
+			}
+
+		}
+		else
+		{
+			status = ERROR_NOK;
+ 358:	81 e0       	ldi	r24, 0x01	; 1
+ 35a:	89 83       	std	Y+1, r24	; 0x01
+		}
+		SET_BIT(SPCR,SPE);
+ 35c:	ad e2       	ldi	r26, 0x2D	; 45
+ 35e:	b0 e0       	ldi	r27, 0x00	; 0
+ 360:	ed e2       	ldi	r30, 0x2D	; 45
+ 362:	f0 e0       	ldi	r31, 0x00	; 0
+ 364:	80 81       	ld	r24, Z
+ 366:	80 64       	ori	r24, 0x40	; 64
+ 368:	8c 93       	st	X, r24
+ 36a:	09 c0       	rjmp	.+18     	; 0x37e <SPI_init+0x2ca>
+	}
+	else
+	{
+		status = ERROR_NOK;
+ 36c:	81 e0       	ldi	r24, 0x01	; 1
+ 36e:	89 83       	std	Y+1, r24	; 0x01
+		CLEAR_BIT(SPCR,SPE);
+ 370:	ad e2       	ldi	r26, 0x2D	; 45
+ 372:	b0 e0       	ldi	r27, 0x00	; 0
+ 374:	ed e2       	ldi	r30, 0x2D	; 45
+ 376:	f0 e0       	ldi	r31, 0x00	; 0
+ 378:	80 81       	ld	r24, Z
+ 37a:	8f 7b       	andi	r24, 0xBF	; 191
+ 37c:	8c 93       	st	X, r24
+	}
+	return status;
+ 37e:	89 81       	ldd	r24, Y+1	; 0x01
+}
+ 380:	0f 90       	pop	r0
+ 382:	0f 90       	pop	r0
+ 384:	0f 90       	pop	r0
+ 386:	cf 91       	pop	r28
+ 388:	df 91       	pop	r29
+ 38a:	08 95       	ret
+
+0000038c <SPI_sendByte>:
+ * @return: returns error status
+ * Description: Function to send data byte using SPI
+ **************************************************************************/
+
+uint8_t SPI_sendByte(const uint8_t data)
+{
+ 38c:	df 93       	push	r29
+ 38e:	cf 93       	push	r28
+ 390:	00 d0       	rcall	.+0      	; 0x392 <SPI_sendByte+0x6>
+ 392:	cd b7       	in	r28, 0x3d	; 61
+ 394:	de b7       	in	r29, 0x3e	; 62
+ 396:	8a 83       	std	Y+2, r24	; 0x02
+	uint8_t status;
+	if (SPI_POLLING == gu8_Int)
+ 398:	80 91 79 00 	lds	r24, 0x0079
+ 39c:	88 23       	and	r24, r24
+ 39e:	51 f4       	brne	.+20     	; 0x3b4 <SPI_sendByte+0x28>
+	{
+		SPDR = data;
+ 3a0:	ef e2       	ldi	r30, 0x2F	; 47
+ 3a2:	f0 e0       	ldi	r31, 0x00	; 0
+ 3a4:	8a 81       	ldd	r24, Y+2	; 0x02
+ 3a6:	80 83       	st	Z, r24
+		while (BIT_IS_CLEAR(SPSR,SPIF)){}
+ 3a8:	ee e2       	ldi	r30, 0x2E	; 46
+ 3aa:	f0 e0       	ldi	r31, 0x00	; 0
+ 3ac:	80 81       	ld	r24, Z
+ 3ae:	88 23       	and	r24, r24
+ 3b0:	dc f7       	brge	.-10     	; 0x3a8 <SPI_sendByte+0x1c>
+ 3b2:	0e c0       	rjmp	.+28     	; 0x3d0 <SPI_sendByte+0x44>
+	}
+	else if (SPI_INTERRUPT == gu8_Int)
+ 3b4:	80 91 79 00 	lds	r24, 0x0079
+ 3b8:	81 30       	cpi	r24, 0x01	; 1
+ 3ba:	51 f4       	brne	.+20     	; 0x3d0 <SPI_sendByte+0x44>
+	{
+		gu8_Var = data;
+ 3bc:	8a 81       	ldd	r24, Y+2	; 0x02
+ 3be:	80 93 7a 00 	sts	0x007A, r24
+		SET_BIT(SPCR,SPIE);
+ 3c2:	ad e2       	ldi	r26, 0x2D	; 45
+ 3c4:	b0 e0       	ldi	r27, 0x00	; 0
+ 3c6:	ed e2       	ldi	r30, 0x2D	; 45
+ 3c8:	f0 e0       	ldi	r31, 0x00	; 0
+ 3ca:	80 81       	ld	r24, Z
+ 3cc:	80 68       	ori	r24, 0x80	; 128
+ 3ce:	8c 93       	st	X, r24
+	}
+	return status;
+ 3d0:	89 81       	ldd	r24, Y+1	; 0x01
+}
+ 3d2:	0f 90       	pop	r0
+ 3d4:	0f 90       	pop	r0
+ 3d6:	cf 91       	pop	r28
+ 3d8:	df 91       	pop	r29
+ 3da:	08 95       	ret
+
+000003dc <SPI_receiveByte>:
+ * @return: returns error status
+ * Description: Function to receive data byte using SPI
+ **************************************************************************/
+
+uint8_t SPI_receiveByte(uint8_t *data)
+{
+ 3dc:	df 93       	push	r29
+ 3de:	cf 93       	push	r28
+ 3e0:	00 d0       	rcall	.+0      	; 0x3e2 <SPI_receiveByte+0x6>
+ 3e2:	0f 92       	push	r0
+ 3e4:	cd b7       	in	r28, 0x3d	; 61
+ 3e6:	de b7       	in	r29, 0x3e	; 62
+ 3e8:	9b 83       	std	Y+3, r25	; 0x03
+ 3ea:	8a 83       	std	Y+2, r24	; 0x02
+	uint8_t status;
+	if (SPI_POLLING == gu8_Int)
+ 3ec:	80 91 79 00 	lds	r24, 0x0079
+ 3f0:	88 23       	and	r24, r24
+ 3f2:	61 f4       	brne	.+24     	; 0x40c <SPI_receiveByte+0x30>
+	{
+		while (BIT_IS_CLEAR(SPSR,SPIF)){}
+ 3f4:	ee e2       	ldi	r30, 0x2E	; 46
+ 3f6:	f0 e0       	ldi	r31, 0x00	; 0
+ 3f8:	80 81       	ld	r24, Z
+ 3fa:	88 23       	and	r24, r24
+ 3fc:	dc f7       	brge	.-10     	; 0x3f4 <SPI_receiveByte+0x18>
+		*data=SPDR;
+ 3fe:	ef e2       	ldi	r30, 0x2F	; 47
+ 400:	f0 e0       	ldi	r31, 0x00	; 0
+ 402:	80 81       	ld	r24, Z
+ 404:	ea 81       	ldd	r30, Y+2	; 0x02
+ 406:	fb 81       	ldd	r31, Y+3	; 0x03
+ 408:	80 83       	st	Z, r24
+ 40a:	0b c0       	rjmp	.+22     	; 0x422 <SPI_receiveByte+0x46>
+	}
+	else if (SPI_INTERRUPT == gu8_Int)
+ 40c:	80 91 79 00 	lds	r24, 0x0079
+ 410:	81 30       	cpi	r24, 0x01	; 1
+ 412:	39 f4       	brne	.+14     	; 0x422 <SPI_receiveByte+0x46>
+	{
+		SET_BIT(SPCR,SPIE);
+ 414:	ad e2       	ldi	r26, 0x2D	; 45
+ 416:	b0 e0       	ldi	r27, 0x00	; 0
+ 418:	ed e2       	ldi	r30, 0x2D	; 45
+ 41a:	f0 e0       	ldi	r31, 0x00	; 0
+ 41c:	80 81       	ld	r24, Z
+ 41e:	80 68       	ori	r24, 0x80	; 128
+ 420:	8c 93       	st	X, r24
+	}
+	return status;
+ 422:	89 81       	ldd	r24, Y+1	; 0x01
+}
+ 424:	0f 90       	pop	r0
+ 426:	0f 90       	pop	r0
+ 428:	0f 90       	pop	r0
+ 42a:	cf 91       	pop	r28
+ 42c:	df 91       	pop	r29
+ 42e:	08 95       	ret
+
+00000430 <SPI_sendString>:
+ * @return: returns error status
+ * Description: Function to receive data byte using SPI
+ **************************************************************************/
+
+uint8_t SPI_sendString(const uint8_t *Str)
+{
+ 430:	df 93       	push	r29
+ 432:	cf 93       	push	r28
+ 434:	00 d0       	rcall	.+0      	; 0x436 <SPI_sendString+0x6>
+ 436:	00 d0       	rcall	.+0      	; 0x438 <SPI_sendString+0x8>
+ 438:	cd b7       	in	r28, 0x3d	; 61
+ 43a:	de b7       	in	r29, 0x3e	; 62
+ 43c:	9c 83       	std	Y+4, r25	; 0x04
+ 43e:	8b 83       	std	Y+3, r24	; 0x03
+	uint8_t status;
+	uint8_t loop = 0;
+ 440:	19 82       	std	Y+1, r1	; 0x01
+ 442:	0e c0       	rjmp	.+28     	; 0x460 <SPI_sendString+0x30>
+	while(Str[loop] != '\0')
+	{
+		SPI_sendByte(Str[loop]);
+ 444:	89 81       	ldd	r24, Y+1	; 0x01
+ 446:	28 2f       	mov	r18, r24
+ 448:	30 e0       	ldi	r19, 0x00	; 0
+ 44a:	8b 81       	ldd	r24, Y+3	; 0x03
+ 44c:	9c 81       	ldd	r25, Y+4	; 0x04
+ 44e:	fc 01       	movw	r30, r24
+ 450:	e2 0f       	add	r30, r18
+ 452:	f3 1f       	adc	r31, r19
+ 454:	80 81       	ld	r24, Z
+ 456:	0e 94 c6 01 	call	0x38c	; 0x38c <SPI_sendByte>
+		loop++;
+ 45a:	89 81       	ldd	r24, Y+1	; 0x01
+ 45c:	8f 5f       	subi	r24, 0xFF	; 255
+ 45e:	89 83       	std	Y+1, r24	; 0x01
+
+uint8_t SPI_sendString(const uint8_t *Str)
+{
+	uint8_t status;
+	uint8_t loop = 0;
+	while(Str[loop] != '\0')
+ 460:	89 81       	ldd	r24, Y+1	; 0x01
+ 462:	28 2f       	mov	r18, r24
+ 464:	30 e0       	ldi	r19, 0x00	; 0
+ 466:	8b 81       	ldd	r24, Y+3	; 0x03
+ 468:	9c 81       	ldd	r25, Y+4	; 0x04
+ 46a:	fc 01       	movw	r30, r24
+ 46c:	e2 0f       	add	r30, r18
+ 46e:	f3 1f       	adc	r31, r19
+ 470:	80 81       	ld	r24, Z
+ 472:	88 23       	and	r24, r24
+ 474:	39 f7       	brne	.-50     	; 0x444 <SPI_sendString+0x14>
+	{
+		SPI_sendByte(Str[loop]);
+		loop++;
+	}
+	return status;
+ 476:	8a 81       	ldd	r24, Y+2	; 0x02
+}
+ 478:	0f 90       	pop	r0
+ 47a:	0f 90       	pop	r0
+ 47c:	0f 90       	pop	r0
+ 47e:	0f 90       	pop	r0
+ 480:	cf 91       	pop	r28
+ 482:	df 91       	pop	r29
+ 484:	08 95       	ret
+
+00000486 <SPI_receiveString>:
+ * @return: returns error status
+ * Description: Function to receive data byte using SPI
+ **************************************************************************/
+
+uint8_t SPI_receiveString(uint8_t *Str)
+{
+ 486:	df 93       	push	r29
+ 488:	cf 93       	push	r28
+ 48a:	00 d0       	rcall	.+0      	; 0x48c <SPI_receiveString+0x6>
+ 48c:	00 d0       	rcall	.+0      	; 0x48e <SPI_receiveString+0x8>
+ 48e:	cd b7       	in	r28, 0x3d	; 61
+ 490:	de b7       	in	r29, 0x3e	; 62
+ 492:	9c 83       	std	Y+4, r25	; 0x04
+ 494:	8b 83       	std	Y+3, r24	; 0x03
+	uint8_t status;
+	uint8_t loop = 0;
+ 496:	19 82       	std	Y+1, r1	; 0x01
+	SPI_receiveByte(&Str[loop]);
+ 498:	89 81       	ldd	r24, Y+1	; 0x01
+ 49a:	28 2f       	mov	r18, r24
+ 49c:	30 e0       	ldi	r19, 0x00	; 0
+ 49e:	8b 81       	ldd	r24, Y+3	; 0x03
+ 4a0:	9c 81       	ldd	r25, Y+4	; 0x04
+ 4a2:	82 0f       	add	r24, r18
+ 4a4:	93 1f       	adc	r25, r19
+ 4a6:	0e 94 ee 01 	call	0x3dc	; 0x3dc <SPI_receiveByte>
+ 4aa:	0c c0       	rjmp	.+24     	; 0x4c4 <SPI_receiveString+0x3e>
+	while(Str[loop] != '#')
+	{
+		loop++;
+ 4ac:	89 81       	ldd	r24, Y+1	; 0x01
+ 4ae:	8f 5f       	subi	r24, 0xFF	; 255
+ 4b0:	89 83       	std	Y+1, r24	; 0x01
+		SPI_receiveByte(&Str[loop]);
+ 4b2:	89 81       	ldd	r24, Y+1	; 0x01
+ 4b4:	28 2f       	mov	r18, r24
+ 4b6:	30 e0       	ldi	r19, 0x00	; 0
+ 4b8:	8b 81       	ldd	r24, Y+3	; 0x03
+ 4ba:	9c 81       	ldd	r25, Y+4	; 0x04
+ 4bc:	82 0f       	add	r24, r18
+ 4be:	93 1f       	adc	r25, r19
+ 4c0:	0e 94 ee 01 	call	0x3dc	; 0x3dc <SPI_receiveByte>
+uint8_t SPI_receiveString(uint8_t *Str)
+{
+	uint8_t status;
+	uint8_t loop = 0;
+	SPI_receiveByte(&Str[loop]);
+	while(Str[loop] != '#')
+ 4c4:	89 81       	ldd	r24, Y+1	; 0x01
+ 4c6:	28 2f       	mov	r18, r24
+ 4c8:	30 e0       	ldi	r19, 0x00	; 0
+ 4ca:	8b 81       	ldd	r24, Y+3	; 0x03
+ 4cc:	9c 81       	ldd	r25, Y+4	; 0x04
+ 4ce:	fc 01       	movw	r30, r24
+ 4d0:	e2 0f       	add	r30, r18
+ 4d2:	f3 1f       	adc	r31, r19
+ 4d4:	80 81       	ld	r24, Z
+ 4d6:	83 32       	cpi	r24, 0x23	; 35
+ 4d8:	49 f7       	brne	.-46     	; 0x4ac <SPI_receiveString+0x26>
+	{
+		loop++;
+		SPI_receiveByte(&Str[loop]);
+	}
+	Str[loop] = '\0';
+ 4da:	89 81       	ldd	r24, Y+1	; 0x01
+ 4dc:	28 2f       	mov	r18, r24
+ 4de:	30 e0       	ldi	r19, 0x00	; 0
+ 4e0:	8b 81       	ldd	r24, Y+3	; 0x03
+ 4e2:	9c 81       	ldd	r25, Y+4	; 0x04
+ 4e4:	fc 01       	movw	r30, r24
+ 4e6:	e2 0f       	add	r30, r18
+ 4e8:	f3 1f       	adc	r31, r19
+ 4ea:	10 82       	st	Z, r1
+	return status;
+ 4ec:	8a 81       	ldd	r24, Y+2	; 0x02
+}
+ 4ee:	0f 90       	pop	r0
+ 4f0:	0f 90       	pop	r0
+ 4f2:	0f 90       	pop	r0
+ 4f4:	0f 90       	pop	r0
+ 4f6:	cf 91       	pop	r28
+ 4f8:	df 91       	pop	r29
+ 4fa:	08 95       	ret
+
+000004fc <DIO_Init_Port>:
+ * @param: Port_no, Port number sent by the user
+ * @param: val, value to assign to port
+ * Description: Function to initialize Port Direction and return status
+ **************************************************************************/
+uint8_t DIO_Init_Port(uint8_t Port_no , uint8_t val)
+{
+ 4fc:	df 93       	push	r29
+ 4fe:	cf 93       	push	r28
+ 500:	00 d0       	rcall	.+0      	; 0x502 <DIO_Init_Port+0x6>
+ 502:	0f 92       	push	r0
+ 504:	cd b7       	in	r28, 0x3d	; 61
+ 506:	de b7       	in	r29, 0x3e	; 62
+ 508:	89 83       	std	Y+1, r24	; 0x01
+ 50a:	6a 83       	std	Y+2, r22	; 0x02
+	if (Port_no< number_of_ports)
+ 50c:	89 81       	ldd	r24, Y+1	; 0x01
+ 50e:	84 30       	cpi	r24, 0x04	; 4
+ 510:	78 f4       	brcc	.+30     	; 0x530 <DIO_Init_Port+0x34>
+	{
+		*gapu8_DDR[Port_no]=val;
+ 512:	89 81       	ldd	r24, Y+1	; 0x01
+ 514:	88 2f       	mov	r24, r24
+ 516:	90 e0       	ldi	r25, 0x00	; 0
+ 518:	88 0f       	add	r24, r24
+ 51a:	99 1f       	adc	r25, r25
+ 51c:	fc 01       	movw	r30, r24
+ 51e:	e8 59       	subi	r30, 0x98	; 152
+ 520:	ff 4f       	sbci	r31, 0xFF	; 255
+ 522:	01 90       	ld	r0, Z+
+ 524:	f0 81       	ld	r31, Z
+ 526:	e0 2d       	mov	r30, r0
+ 528:	8a 81       	ldd	r24, Y+2	; 0x02
+ 52a:	80 83       	st	Z, r24
+		return ERROR_OK;
+ 52c:	1b 82       	std	Y+3, r1	; 0x03
+ 52e:	02 c0       	rjmp	.+4      	; 0x534 <DIO_Init_Port+0x38>
+	}
+	else
+	{
+		return ERROR_NOK;
+ 530:	81 e0       	ldi	r24, 0x01	; 1
+ 532:	8b 83       	std	Y+3, r24	; 0x03
+ 534:	8b 81       	ldd	r24, Y+3	; 0x03
+	}
+}
+ 536:	0f 90       	pop	r0
+ 538:	0f 90       	pop	r0
+ 53a:	0f 90       	pop	r0
+ 53c:	cf 91       	pop	r28
+ 53e:	df 91       	pop	r29
+ 540:	08 95       	ret
+
+00000542 <DIO_Init_Pin>:
+ * @param: val, value to assign to pin
+ * Description: Function to initialize Pin Direction and return status
+ **************************************************************************/
+
+uint8_t DIO_Init_Pin(uint8_t Pin_no, uint8_t val)
+{
+ 542:	df 93       	push	r29
+ 544:	cf 93       	push	r28
+ 546:	00 d0       	rcall	.+0      	; 0x548 <DIO_Init_Pin+0x6>
+ 548:	00 d0       	rcall	.+0      	; 0x54a <DIO_Init_Pin+0x8>
+ 54a:	0f 92       	push	r0
+ 54c:	cd b7       	in	r28, 0x3d	; 61
+ 54e:	de b7       	in	r29, 0x3e	; 62
+ 550:	8b 83       	std	Y+3, r24	; 0x03
+ 552:	6c 83       	std	Y+4, r22	; 0x04
+	uint8_t port ,pin ;
+	if (Pin_no < number_of_all_pins)
+ 554:	8b 81       	ldd	r24, Y+3	; 0x03
+ 556:	80 32       	cpi	r24, 0x20	; 32
+ 558:	08 f0       	brcs	.+2      	; 0x55c <DIO_Init_Pin+0x1a>
+ 55a:	5e c0       	rjmp	.+188    	; 0x618 <DIO_Init_Pin+0xd6>
+	{
+		port = Pin_no / number_of_pins;
+ 55c:	8b 81       	ldd	r24, Y+3	; 0x03
+ 55e:	86 95       	lsr	r24
+ 560:	86 95       	lsr	r24
+ 562:	86 95       	lsr	r24
+ 564:	8a 83       	std	Y+2, r24	; 0x02
+		pin = Pin_no % number_of_pins;
+ 566:	8b 81       	ldd	r24, Y+3	; 0x03
+ 568:	87 70       	andi	r24, 0x07	; 7
+ 56a:	89 83       	std	Y+1, r24	; 0x01
+		if (val == HIGH)
+ 56c:	8c 81       	ldd	r24, Y+4	; 0x04
+ 56e:	81 30       	cpi	r24, 0x01	; 1
+ 570:	31 f5       	brne	.+76     	; 0x5be <DIO_Init_Pin+0x7c>
+		{
+			SET_BIT(*gapu8_DDR[port],pin);
+ 572:	8a 81       	ldd	r24, Y+2	; 0x02
+ 574:	88 2f       	mov	r24, r24
+ 576:	90 e0       	ldi	r25, 0x00	; 0
+ 578:	88 0f       	add	r24, r24
+ 57a:	99 1f       	adc	r25, r25
+ 57c:	fc 01       	movw	r30, r24
+ 57e:	e8 59       	subi	r30, 0x98	; 152
+ 580:	ff 4f       	sbci	r31, 0xFF	; 255
+ 582:	a0 81       	ld	r26, Z
+ 584:	b1 81       	ldd	r27, Z+1	; 0x01
+ 586:	8a 81       	ldd	r24, Y+2	; 0x02
+ 588:	88 2f       	mov	r24, r24
+ 58a:	90 e0       	ldi	r25, 0x00	; 0
+ 58c:	88 0f       	add	r24, r24
+ 58e:	99 1f       	adc	r25, r25
+ 590:	fc 01       	movw	r30, r24
+ 592:	e8 59       	subi	r30, 0x98	; 152
+ 594:	ff 4f       	sbci	r31, 0xFF	; 255
+ 596:	01 90       	ld	r0, Z+
+ 598:	f0 81       	ld	r31, Z
+ 59a:	e0 2d       	mov	r30, r0
+ 59c:	80 81       	ld	r24, Z
+ 59e:	48 2f       	mov	r20, r24
+ 5a0:	89 81       	ldd	r24, Y+1	; 0x01
+ 5a2:	28 2f       	mov	r18, r24
+ 5a4:	30 e0       	ldi	r19, 0x00	; 0
+ 5a6:	81 e0       	ldi	r24, 0x01	; 1
+ 5a8:	90 e0       	ldi	r25, 0x00	; 0
+ 5aa:	02 2e       	mov	r0, r18
+ 5ac:	02 c0       	rjmp	.+4      	; 0x5b2 <DIO_Init_Pin+0x70>
+ 5ae:	88 0f       	add	r24, r24
+ 5b0:	99 1f       	adc	r25, r25
+ 5b2:	0a 94       	dec	r0
+ 5b4:	e2 f7       	brpl	.-8      	; 0x5ae <DIO_Init_Pin+0x6c>
+ 5b6:	84 2b       	or	r24, r20
+ 5b8:	8c 93       	st	X, r24
+			return ERROR_OK;
+ 5ba:	1d 82       	std	Y+5, r1	; 0x05
+ 5bc:	2f c0       	rjmp	.+94     	; 0x61c <DIO_Init_Pin+0xda>
+		}
+		else if (val == LOW)
+ 5be:	8c 81       	ldd	r24, Y+4	; 0x04
+ 5c0:	88 23       	and	r24, r24
+ 5c2:	39 f5       	brne	.+78     	; 0x612 <DIO_Init_Pin+0xd0>
+		{
+			CLEAR_BIT(*gapu8_DDR[port],pin);
+ 5c4:	8a 81       	ldd	r24, Y+2	; 0x02
+ 5c6:	88 2f       	mov	r24, r24
+ 5c8:	90 e0       	ldi	r25, 0x00	; 0
+ 5ca:	88 0f       	add	r24, r24
+ 5cc:	99 1f       	adc	r25, r25
+ 5ce:	fc 01       	movw	r30, r24
+ 5d0:	e8 59       	subi	r30, 0x98	; 152
+ 5d2:	ff 4f       	sbci	r31, 0xFF	; 255
+ 5d4:	a0 81       	ld	r26, Z
+ 5d6:	b1 81       	ldd	r27, Z+1	; 0x01
+ 5d8:	8a 81       	ldd	r24, Y+2	; 0x02
+ 5da:	88 2f       	mov	r24, r24
+ 5dc:	90 e0       	ldi	r25, 0x00	; 0
+ 5de:	88 0f       	add	r24, r24
+ 5e0:	99 1f       	adc	r25, r25
+ 5e2:	fc 01       	movw	r30, r24
+ 5e4:	e8 59       	subi	r30, 0x98	; 152
+ 5e6:	ff 4f       	sbci	r31, 0xFF	; 255
+ 5e8:	01 90       	ld	r0, Z+
+ 5ea:	f0 81       	ld	r31, Z
+ 5ec:	e0 2d       	mov	r30, r0
+ 5ee:	80 81       	ld	r24, Z
+ 5f0:	48 2f       	mov	r20, r24
+ 5f2:	89 81       	ldd	r24, Y+1	; 0x01
+ 5f4:	28 2f       	mov	r18, r24
+ 5f6:	30 e0       	ldi	r19, 0x00	; 0
+ 5f8:	81 e0       	ldi	r24, 0x01	; 1
+ 5fa:	90 e0       	ldi	r25, 0x00	; 0
+ 5fc:	02 2e       	mov	r0, r18
+ 5fe:	02 c0       	rjmp	.+4      	; 0x604 <DIO_Init_Pin+0xc2>
+ 600:	88 0f       	add	r24, r24
+ 602:	99 1f       	adc	r25, r25
+ 604:	0a 94       	dec	r0
+ 606:	e2 f7       	brpl	.-8      	; 0x600 <DIO_Init_Pin+0xbe>
+ 608:	80 95       	com	r24
+ 60a:	84 23       	and	r24, r20
+ 60c:	8c 93       	st	X, r24
+
+			return ERROR_OK;
+ 60e:	1d 82       	std	Y+5, r1	; 0x05
+ 610:	05 c0       	rjmp	.+10     	; 0x61c <DIO_Init_Pin+0xda>
+		}
+		else
+		{
+			return ERROR_NOK;
+ 612:	81 e0       	ldi	r24, 0x01	; 1
+ 614:	8d 83       	std	Y+5, r24	; 0x05
+ 616:	02 c0       	rjmp	.+4      	; 0x61c <DIO_Init_Pin+0xda>
+		}
+	}
+	else
+	{
+		return ERROR_NOK;
+ 618:	81 e0       	ldi	r24, 0x01	; 1
+ 61a:	8d 83       	std	Y+5, r24	; 0x05
+ 61c:	8d 81       	ldd	r24, Y+5	; 0x05
+	}
+}
+ 61e:	0f 90       	pop	r0
+ 620:	0f 90       	pop	r0
+ 622:	0f 90       	pop	r0
+ 624:	0f 90       	pop	r0
+ 626:	0f 90       	pop	r0
+ 628:	cf 91       	pop	r28
+ 62a:	df 91       	pop	r29
+ 62c:	08 95       	ret
+
+0000062e <DIO_Port_Read>:
+ * @param: *val, value to read from port
+ * Description: Function to return Port value and return status
+ **************************************************************************/
+
+uint8_t DIO_Port_Read (uint8_t Port_no, uint8_t *val)
+{
+ 62e:	df 93       	push	r29
+ 630:	cf 93       	push	r28
+ 632:	00 d0       	rcall	.+0      	; 0x634 <DIO_Port_Read+0x6>
+ 634:	00 d0       	rcall	.+0      	; 0x636 <DIO_Port_Read+0x8>
+ 636:	cd b7       	in	r28, 0x3d	; 61
+ 638:	de b7       	in	r29, 0x3e	; 62
+ 63a:	89 83       	std	Y+1, r24	; 0x01
+ 63c:	7b 83       	std	Y+3, r23	; 0x03
+ 63e:	6a 83       	std	Y+2, r22	; 0x02
+	if (Port_no < number_of_ports)
+ 640:	89 81       	ldd	r24, Y+1	; 0x01
+ 642:	84 30       	cpi	r24, 0x04	; 4
+ 644:	88 f4       	brcc	.+34     	; 0x668 <DIO_Port_Read+0x3a>
+	{
+		*val = *gapu8_PIN[Port_no];
+ 646:	89 81       	ldd	r24, Y+1	; 0x01
+ 648:	88 2f       	mov	r24, r24
+ 64a:	90 e0       	ldi	r25, 0x00	; 0
+ 64c:	88 0f       	add	r24, r24
+ 64e:	99 1f       	adc	r25, r25
+ 650:	fc 01       	movw	r30, r24
+ 652:	e0 59       	subi	r30, 0x90	; 144
+ 654:	ff 4f       	sbci	r31, 0xFF	; 255
+ 656:	01 90       	ld	r0, Z+
+ 658:	f0 81       	ld	r31, Z
+ 65a:	e0 2d       	mov	r30, r0
+ 65c:	80 81       	ld	r24, Z
+ 65e:	ea 81       	ldd	r30, Y+2	; 0x02
+ 660:	fb 81       	ldd	r31, Y+3	; 0x03
+ 662:	80 83       	st	Z, r24
+		return ERROR_OK;
+ 664:	1c 82       	std	Y+4, r1	; 0x04
+ 666:	02 c0       	rjmp	.+4      	; 0x66c <DIO_Port_Read+0x3e>
+	}
+	else
+	{
+		return ERROR_NOK;
+ 668:	81 e0       	ldi	r24, 0x01	; 1
+ 66a:	8c 83       	std	Y+4, r24	; 0x04
+ 66c:	8c 81       	ldd	r24, Y+4	; 0x04
+	}
+}
+ 66e:	0f 90       	pop	r0
+ 670:	0f 90       	pop	r0
+ 672:	0f 90       	pop	r0
+ 674:	0f 90       	pop	r0
+ 676:	cf 91       	pop	r28
+ 678:	df 91       	pop	r29
+ 67a:	08 95       	ret
+
+0000067c <DIO_Pin_Read>:
+ * @param: *val, value to read from pin
+ * Description: Function to return Pin value and return status
+ **************************************************************************/
+
+uint8_t DIO_Pin_Read (uint8_t Pin_no, uint8_t *val)
+{
+ 67c:	df 93       	push	r29
+ 67e:	cf 93       	push	r28
+ 680:	00 d0       	rcall	.+0      	; 0x682 <DIO_Pin_Read+0x6>
+ 682:	00 d0       	rcall	.+0      	; 0x684 <DIO_Pin_Read+0x8>
+ 684:	00 d0       	rcall	.+0      	; 0x686 <DIO_Pin_Read+0xa>
+ 686:	cd b7       	in	r28, 0x3d	; 61
+ 688:	de b7       	in	r29, 0x3e	; 62
+ 68a:	8b 83       	std	Y+3, r24	; 0x03
+ 68c:	7d 83       	std	Y+5, r23	; 0x05
+ 68e:	6c 83       	std	Y+4, r22	; 0x04
+	uint8_t port , pin ;
+	if (Pin_no < number_of_all_pins)
+ 690:	8b 81       	ldd	r24, Y+3	; 0x03
+ 692:	80 32       	cpi	r24, 0x20	; 32
+ 694:	90 f5       	brcc	.+100    	; 0x6fa <DIO_Pin_Read+0x7e>
+	{
+		port = Pin_no / number_of_pins;
+ 696:	8b 81       	ldd	r24, Y+3	; 0x03
+ 698:	86 95       	lsr	r24
+ 69a:	86 95       	lsr	r24
+ 69c:	86 95       	lsr	r24
+ 69e:	8a 83       	std	Y+2, r24	; 0x02
+		pin = Pin_no % number_of_pins;
+ 6a0:	8b 81       	ldd	r24, Y+3	; 0x03
+ 6a2:	87 70       	andi	r24, 0x07	; 7
+ 6a4:	89 83       	std	Y+1, r24	; 0x01
+		*val = GET_BIT(*gapu8_PIN[port],pin);
+ 6a6:	8a 81       	ldd	r24, Y+2	; 0x02
+ 6a8:	88 2f       	mov	r24, r24
+ 6aa:	90 e0       	ldi	r25, 0x00	; 0
+ 6ac:	88 0f       	add	r24, r24
+ 6ae:	99 1f       	adc	r25, r25
+ 6b0:	fc 01       	movw	r30, r24
+ 6b2:	e0 59       	subi	r30, 0x90	; 144
+ 6b4:	ff 4f       	sbci	r31, 0xFF	; 255
+ 6b6:	01 90       	ld	r0, Z+
+ 6b8:	f0 81       	ld	r31, Z
+ 6ba:	e0 2d       	mov	r30, r0
+ 6bc:	80 81       	ld	r24, Z
+ 6be:	48 2f       	mov	r20, r24
+ 6c0:	50 e0       	ldi	r21, 0x00	; 0
+ 6c2:	89 81       	ldd	r24, Y+1	; 0x01
+ 6c4:	28 2f       	mov	r18, r24
+ 6c6:	30 e0       	ldi	r19, 0x00	; 0
+ 6c8:	81 e0       	ldi	r24, 0x01	; 1
+ 6ca:	90 e0       	ldi	r25, 0x00	; 0
+ 6cc:	02 c0       	rjmp	.+4      	; 0x6d2 <DIO_Pin_Read+0x56>
+ 6ce:	88 0f       	add	r24, r24
+ 6d0:	99 1f       	adc	r25, r25
+ 6d2:	2a 95       	dec	r18
+ 6d4:	e2 f7       	brpl	.-8      	; 0x6ce <DIO_Pin_Read+0x52>
+ 6d6:	9a 01       	movw	r18, r20
+ 6d8:	28 23       	and	r18, r24
+ 6da:	39 23       	and	r19, r25
+ 6dc:	89 81       	ldd	r24, Y+1	; 0x01
+ 6de:	88 2f       	mov	r24, r24
+ 6e0:	90 e0       	ldi	r25, 0x00	; 0
+ 6e2:	a9 01       	movw	r20, r18
+ 6e4:	02 c0       	rjmp	.+4      	; 0x6ea <DIO_Pin_Read+0x6e>
+ 6e6:	55 95       	asr	r21
+ 6e8:	47 95       	ror	r20
+ 6ea:	8a 95       	dec	r24
+ 6ec:	e2 f7       	brpl	.-8      	; 0x6e6 <DIO_Pin_Read+0x6a>
+ 6ee:	ca 01       	movw	r24, r20
+ 6f0:	ec 81       	ldd	r30, Y+4	; 0x04
+ 6f2:	fd 81       	ldd	r31, Y+5	; 0x05
+ 6f4:	80 83       	st	Z, r24
+		return ERROR_OK;
+ 6f6:	1e 82       	std	Y+6, r1	; 0x06
+ 6f8:	02 c0       	rjmp	.+4      	; 0x6fe <DIO_Pin_Read+0x82>
+	}
+	else
+	{
+		return ERROR_NOK;
+ 6fa:	51 e0       	ldi	r21, 0x01	; 1
+ 6fc:	5e 83       	std	Y+6, r21	; 0x06
+ 6fe:	8e 81       	ldd	r24, Y+6	; 0x06
+	}
+}
+ 700:	26 96       	adiw	r28, 0x06	; 6
+ 702:	0f b6       	in	r0, 0x3f	; 63
+ 704:	f8 94       	cli
+ 706:	de bf       	out	0x3e, r29	; 62
+ 708:	0f be       	out	0x3f, r0	; 63
+ 70a:	cd bf       	out	0x3d, r28	; 61
+ 70c:	cf 91       	pop	r28
+ 70e:	df 91       	pop	r29
+ 710:	08 95       	ret
+
+00000712 <DIO_Port_Write>:
+ * @param: val, value to write to port
+ * Description: Function to write Port value and return status
+ **************************************************************************/
+
+uint8_t DIO_Port_Write(uint8_t Port_no,uint8_t val)
+{
+ 712:	df 93       	push	r29
+ 714:	cf 93       	push	r28
+ 716:	00 d0       	rcall	.+0      	; 0x718 <DIO_Port_Write+0x6>
+ 718:	0f 92       	push	r0
+ 71a:	cd b7       	in	r28, 0x3d	; 61
+ 71c:	de b7       	in	r29, 0x3e	; 62
+ 71e:	89 83       	std	Y+1, r24	; 0x01
+ 720:	6a 83       	std	Y+2, r22	; 0x02
+	if (Port_no < number_of_ports)
+ 722:	89 81       	ldd	r24, Y+1	; 0x01
+ 724:	84 30       	cpi	r24, 0x04	; 4
+ 726:	78 f4       	brcc	.+30     	; 0x746 <DIO_Port_Write+0x34>
+	{
+		*gapu8_PORT[Port_no]=val;
+ 728:	89 81       	ldd	r24, Y+1	; 0x01
+ 72a:	88 2f       	mov	r24, r24
+ 72c:	90 e0       	ldi	r25, 0x00	; 0
+ 72e:	88 0f       	add	r24, r24
+ 730:	99 1f       	adc	r25, r25
+ 732:	fc 01       	movw	r30, r24
+ 734:	e0 5a       	subi	r30, 0xA0	; 160
+ 736:	ff 4f       	sbci	r31, 0xFF	; 255
+ 738:	01 90       	ld	r0, Z+
+ 73a:	f0 81       	ld	r31, Z
+ 73c:	e0 2d       	mov	r30, r0
+ 73e:	8a 81       	ldd	r24, Y+2	; 0x02
+ 740:	80 83       	st	Z, r24
+		return ERROR_OK;
+ 742:	1b 82       	std	Y+3, r1	; 0x03
+ 744:	02 c0       	rjmp	.+4      	; 0x74a <DIO_Port_Write+0x38>
+	}
+	else
+	{
+		return ERROR_NOK;
+ 746:	81 e0       	ldi	r24, 0x01	; 1
+ 748:	8b 83       	std	Y+3, r24	; 0x03
+ 74a:	8b 81       	ldd	r24, Y+3	; 0x03
+	}
+}
+ 74c:	0f 90       	pop	r0
+ 74e:	0f 90       	pop	r0
+ 750:	0f 90       	pop	r0
+ 752:	cf 91       	pop	r28
+ 754:	df 91       	pop	r29
+ 756:	08 95       	ret
+
+00000758 <DIO_Pin_Write>:
+ * @param: val, value to write to pin
+ * Description: Function to write Pin value and return status
+ **************************************************************************/
+
+uint8_t DIO_Pin_Write(uint8_t Pin_no,uint8_t val)
+{
+ 758:	df 93       	push	r29
+ 75a:	cf 93       	push	r28
+ 75c:	00 d0       	rcall	.+0      	; 0x75e <DIO_Pin_Write+0x6>
+ 75e:	00 d0       	rcall	.+0      	; 0x760 <DIO_Pin_Write+0x8>
+ 760:	0f 92       	push	r0
+ 762:	cd b7       	in	r28, 0x3d	; 61
+ 764:	de b7       	in	r29, 0x3e	; 62
+ 766:	8b 83       	std	Y+3, r24	; 0x03
+ 768:	6c 83       	std	Y+4, r22	; 0x04
+	uint8_t port,pin;
+	if(Pin_no < number_of_all_pins)
+ 76a:	8b 81       	ldd	r24, Y+3	; 0x03
+ 76c:	80 32       	cpi	r24, 0x20	; 32
+ 76e:	08 f0       	brcs	.+2      	; 0x772 <DIO_Pin_Write+0x1a>
+ 770:	5e c0       	rjmp	.+188    	; 0x82e <DIO_Pin_Write+0xd6>
+	{
+		port = Pin_no / number_of_pins;
+ 772:	8b 81       	ldd	r24, Y+3	; 0x03
+ 774:	86 95       	lsr	r24
+ 776:	86 95       	lsr	r24
+ 778:	86 95       	lsr	r24
+ 77a:	8a 83       	std	Y+2, r24	; 0x02
+		pin = Pin_no % number_of_pins;
+ 77c:	8b 81       	ldd	r24, Y+3	; 0x03
+ 77e:	87 70       	andi	r24, 0x07	; 7
+ 780:	89 83       	std	Y+1, r24	; 0x01
+		if (val == HIGH)
+ 782:	8c 81       	ldd	r24, Y+4	; 0x04
+ 784:	81 30       	cpi	r24, 0x01	; 1
+ 786:	31 f5       	brne	.+76     	; 0x7d4 <DIO_Pin_Write+0x7c>
+		{
+			SET_BIT(*gapu8_PORT[port],pin);
+ 788:	8a 81       	ldd	r24, Y+2	; 0x02
+ 78a:	88 2f       	mov	r24, r24
+ 78c:	90 e0       	ldi	r25, 0x00	; 0
+ 78e:	88 0f       	add	r24, r24
+ 790:	99 1f       	adc	r25, r25
+ 792:	fc 01       	movw	r30, r24
+ 794:	e0 5a       	subi	r30, 0xA0	; 160
+ 796:	ff 4f       	sbci	r31, 0xFF	; 255
+ 798:	a0 81       	ld	r26, Z
+ 79a:	b1 81       	ldd	r27, Z+1	; 0x01
+ 79c:	8a 81       	ldd	r24, Y+2	; 0x02
+ 79e:	88 2f       	mov	r24, r24
+ 7a0:	90 e0       	ldi	r25, 0x00	; 0
+ 7a2:	88 0f       	add	r24, r24
+ 7a4:	99 1f       	adc	r25, r25
+ 7a6:	fc 01       	movw	r30, r24
+ 7a8:	e0 5a       	subi	r30, 0xA0	; 160
+ 7aa:	ff 4f       	sbci	r31, 0xFF	; 255
+ 7ac:	01 90       	ld	r0, Z+
+ 7ae:	f0 81       	ld	r31, Z
+ 7b0:	e0 2d       	mov	r30, r0
+ 7b2:	80 81       	ld	r24, Z
+ 7b4:	48 2f       	mov	r20, r24
+ 7b6:	89 81       	ldd	r24, Y+1	; 0x01
+ 7b8:	28 2f       	mov	r18, r24
+ 7ba:	30 e0       	ldi	r19, 0x00	; 0
+ 7bc:	81 e0       	ldi	r24, 0x01	; 1
+ 7be:	90 e0       	ldi	r25, 0x00	; 0
+ 7c0:	02 2e       	mov	r0, r18
+ 7c2:	02 c0       	rjmp	.+4      	; 0x7c8 <DIO_Pin_Write+0x70>
+ 7c4:	88 0f       	add	r24, r24
+ 7c6:	99 1f       	adc	r25, r25
+ 7c8:	0a 94       	dec	r0
+ 7ca:	e2 f7       	brpl	.-8      	; 0x7c4 <DIO_Pin_Write+0x6c>
+ 7cc:	84 2b       	or	r24, r20
+ 7ce:	8c 93       	st	X, r24
+			return ERROR_OK;
+ 7d0:	1d 82       	std	Y+5, r1	; 0x05
+ 7d2:	2f c0       	rjmp	.+94     	; 0x832 <DIO_Pin_Write+0xda>
+		}
+		else if (val == LOW)
+ 7d4:	8c 81       	ldd	r24, Y+4	; 0x04
+ 7d6:	88 23       	and	r24, r24
+ 7d8:	39 f5       	brne	.+78     	; 0x828 <DIO_Pin_Write+0xd0>
+		{
+			CLEAR_BIT(*gapu8_PORT[port],pin);
+ 7da:	8a 81       	ldd	r24, Y+2	; 0x02
+ 7dc:	88 2f       	mov	r24, r24
+ 7de:	90 e0       	ldi	r25, 0x00	; 0
+ 7e0:	88 0f       	add	r24, r24
+ 7e2:	99 1f       	adc	r25, r25
+ 7e4:	fc 01       	movw	r30, r24
+ 7e6:	e0 5a       	subi	r30, 0xA0	; 160
+ 7e8:	ff 4f       	sbci	r31, 0xFF	; 255
+ 7ea:	a0 81       	ld	r26, Z
+ 7ec:	b1 81       	ldd	r27, Z+1	; 0x01
+ 7ee:	8a 81       	ldd	r24, Y+2	; 0x02
+ 7f0:	88 2f       	mov	r24, r24
+ 7f2:	90 e0       	ldi	r25, 0x00	; 0
+ 7f4:	88 0f       	add	r24, r24
+ 7f6:	99 1f       	adc	r25, r25
+ 7f8:	fc 01       	movw	r30, r24
+ 7fa:	e0 5a       	subi	r30, 0xA0	; 160
+ 7fc:	ff 4f       	sbci	r31, 0xFF	; 255
+ 7fe:	01 90       	ld	r0, Z+
+ 800:	f0 81       	ld	r31, Z
+ 802:	e0 2d       	mov	r30, r0
+ 804:	80 81       	ld	r24, Z
+ 806:	48 2f       	mov	r20, r24
+ 808:	89 81       	ldd	r24, Y+1	; 0x01
+ 80a:	28 2f       	mov	r18, r24
+ 80c:	30 e0       	ldi	r19, 0x00	; 0
+ 80e:	81 e0       	ldi	r24, 0x01	; 1
+ 810:	90 e0       	ldi	r25, 0x00	; 0
+ 812:	02 2e       	mov	r0, r18
+ 814:	02 c0       	rjmp	.+4      	; 0x81a <DIO_Pin_Write+0xc2>
+ 816:	88 0f       	add	r24, r24
+ 818:	99 1f       	adc	r25, r25
+ 81a:	0a 94       	dec	r0
+ 81c:	e2 f7       	brpl	.-8      	; 0x816 <DIO_Pin_Write+0xbe>
+ 81e:	80 95       	com	r24
+ 820:	84 23       	and	r24, r20
+ 822:	8c 93       	st	X, r24
+			return ERROR_OK;
+ 824:	1d 82       	std	Y+5, r1	; 0x05
+ 826:	05 c0       	rjmp	.+10     	; 0x832 <DIO_Pin_Write+0xda>
+		}
+		else
+		{
+			return ERROR_NOK;
+ 828:	81 e0       	ldi	r24, 0x01	; 1
+ 82a:	8d 83       	std	Y+5, r24	; 0x05
+ 82c:	02 c0       	rjmp	.+4      	; 0x832 <DIO_Pin_Write+0xda>
+		}
+	}
+	else
+	{
+		return ERROR_NOK;
+ 82e:	81 e0       	ldi	r24, 0x01	; 1
+ 830:	8d 83       	std	Y+5, r24	; 0x05
+ 832:	8d 81       	ldd	r24, Y+5	; 0x05
+	}
+}
+ 834:	0f 90       	pop	r0
+ 836:	0f 90       	pop	r0
+ 838:	0f 90       	pop	r0
+ 83a:	0f 90       	pop	r0
+ 83c:	0f 90       	pop	r0
+ 83e:	cf 91       	pop	r28
+ 840:	df 91       	pop	r29
+ 842:	08 95       	ret
+
+00000844 <DIO_Activate_Pullup>:
+ * @param: Pin_no, Pin number sent by the user
+ * Description: Function to enable the internal Pull-up resistor of a Pin
+ **************************************************************************/
+
+uint8_t DIO_Activate_Pullup(uint8_t Pin_no)
+{
+ 844:	df 93       	push	r29
+ 846:	cf 93       	push	r28
+ 848:	00 d0       	rcall	.+0      	; 0x84a <DIO_Activate_Pullup+0x6>
+ 84a:	00 d0       	rcall	.+0      	; 0x84c <DIO_Activate_Pullup+0x8>
+ 84c:	cd b7       	in	r28, 0x3d	; 61
+ 84e:	de b7       	in	r29, 0x3e	; 62
+ 850:	8b 83       	std	Y+3, r24	; 0x03
+	uint8_t port ,pin ;
+	if (Pin_no < number_of_all_pins)
+ 852:	8b 81       	ldd	r24, Y+3	; 0x03
+ 854:	80 32       	cpi	r24, 0x20	; 32
+ 856:	70 f5       	brcc	.+92     	; 0x8b4 <__stack+0x55>
+	{
+		port = Pin_no / number_of_pins;
+ 858:	8b 81       	ldd	r24, Y+3	; 0x03
+ 85a:	86 95       	lsr	r24
+ 85c:	86 95       	lsr	r24
+ 85e:	86 95       	lsr	r24
+ 860:	8a 83       	std	Y+2, r24	; 0x02
+		pin = Pin_no % number_of_pins;
+ 862:	8b 81       	ldd	r24, Y+3	; 0x03
+ 864:	87 70       	andi	r24, 0x07	; 7
+ 866:	89 83       	std	Y+1, r24	; 0x01
+		SET_BIT(*gapu8_PORT[port],pin);
+ 868:	8a 81       	ldd	r24, Y+2	; 0x02
+ 86a:	88 2f       	mov	r24, r24
+ 86c:	90 e0       	ldi	r25, 0x00	; 0
+ 86e:	88 0f       	add	r24, r24
+ 870:	99 1f       	adc	r25, r25
+ 872:	fc 01       	movw	r30, r24
+ 874:	e0 5a       	subi	r30, 0xA0	; 160
+ 876:	ff 4f       	sbci	r31, 0xFF	; 255
+ 878:	a0 81       	ld	r26, Z
+ 87a:	b1 81       	ldd	r27, Z+1	; 0x01
+ 87c:	8a 81       	ldd	r24, Y+2	; 0x02
+ 87e:	88 2f       	mov	r24, r24
+ 880:	90 e0       	ldi	r25, 0x00	; 0
+ 882:	88 0f       	add	r24, r24
+ 884:	99 1f       	adc	r25, r25
+ 886:	fc 01       	movw	r30, r24
+ 888:	e0 5a       	subi	r30, 0xA0	; 160
+ 88a:	ff 4f       	sbci	r31, 0xFF	; 255
+ 88c:	01 90       	ld	r0, Z+
+ 88e:	f0 81       	ld	r31, Z
+ 890:	e0 2d       	mov	r30, r0
+ 892:	80 81       	ld	r24, Z
+ 894:	48 2f       	mov	r20, r24
+ 896:	89 81       	ldd	r24, Y+1	; 0x01
+ 898:	28 2f       	mov	r18, r24
+ 89a:	30 e0       	ldi	r19, 0x00	; 0
+ 89c:	81 e0       	ldi	r24, 0x01	; 1
+ 89e:	90 e0       	ldi	r25, 0x00	; 0
+ 8a0:	02 2e       	mov	r0, r18
+ 8a2:	02 c0       	rjmp	.+4      	; 0x8a8 <__stack+0x49>
+ 8a4:	88 0f       	add	r24, r24
+ 8a6:	99 1f       	adc	r25, r25
+ 8a8:	0a 94       	dec	r0
+ 8aa:	e2 f7       	brpl	.-8      	; 0x8a4 <__stack+0x45>
+ 8ac:	84 2b       	or	r24, r20
+ 8ae:	8c 93       	st	X, r24
+		return ERROR_OK;
+ 8b0:	1c 82       	std	Y+4, r1	; 0x04
+ 8b2:	02 c0       	rjmp	.+4      	; 0x8b8 <__stack+0x59>
+	}
+	else
+	{
+		return ERROR_NOK;
+ 8b4:	81 e0       	ldi	r24, 0x01	; 1
+ 8b6:	8c 83       	std	Y+4, r24	; 0x04
+ 8b8:	8c 81       	ldd	r24, Y+4	; 0x04
+	}
+}
+ 8ba:	0f 90       	pop	r0
+ 8bc:	0f 90       	pop	r0
+ 8be:	0f 90       	pop	r0
+ 8c0:	0f 90       	pop	r0
+ 8c2:	cf 91       	pop	r28
+ 8c4:	df 91       	pop	r29
+ 8c6:	08 95       	ret
+
+000008c8 <main>:
+
+#define SWITCH_PRESSED 1
+#define SWITCH_NOT_PRESSED 0
+
+int main()
+{
+ 8c8:	df 93       	push	r29
+ 8ca:	cf 93       	push	r28
+ 8cc:	cd b7       	in	r28, 0x3d	; 61
+ 8ce:	de b7       	in	r29, 0x3e	; 62
+ 8d0:	29 97       	sbiw	r28, 0x09	; 9
+ 8d2:	0f b6       	in	r0, 0x3f	; 63
+ 8d4:	f8 94       	cli
+ 8d6:	de bf       	out	0x3e, r29	; 62
+ 8d8:	0f be       	out	0x3f, r0	; 63
+ 8da:	cd bf       	out	0x3d, r28	; 61
+	uint8_t  data;
+	SPI_Cfg_s obj;
+	obj.Data_Order= DATA_ORDER_MSB;
+ 8dc:	19 86       	std	Y+9, r1	; 0x09
+	obj.Interrupt_Mode= SPI_POLLING;
+ 8de:	1d 82       	std	Y+5, r1	; 0x05
+	obj.Phase_Mode= SAMPLING_EDGE_LEAD;
+ 8e0:	1f 82       	std	Y+7, r1	; 0x07
+	obj.Polarity_Mode= CLOCK_POLARITY_LOW;
+ 8e2:	1e 82       	std	Y+6, r1	; 0x06
+	obj.Pre_Scaller= FOSC_4;
+ 8e4:	1a 82       	std	Y+2, r1	; 0x02
+	obj.SPI_Enable= SPI_ENABLE;
+ 8e6:	81 e0       	ldi	r24, 0x01	; 1
+ 8e8:	88 87       	std	Y+8, r24	; 0x08
+	obj.SPI_Mode = SLAVEMODE;
+ 8ea:	1c 82       	std	Y+4, r1	; 0x04
+	obj.Speed_Mode= NORMAL_SPEED_MODE;
+ 8ec:	1b 82       	std	Y+3, r1	; 0x03
+
+	SPI_init(&obj);
+ 8ee:	ce 01       	movw	r24, r28
+ 8f0:	02 96       	adiw	r24, 0x02	; 2
+ 8f2:	0e 94 5a 00 	call	0xb4	; 0xb4 <SPI_init>
+
+	DIO_Init_Pin(PC3,HIGH); //configure PC3 as output pin
+ 8f6:	83 e1       	ldi	r24, 0x13	; 19
+ 8f8:	61 e0       	ldi	r22, 0x01	; 1
+ 8fa:	0e 94 a1 02 	call	0x542	; 0x542 <DIO_Init_Pin>
+	while(1)
+	{
+		SPI_receiveByte(&data); //receive data from the master Micro-controller
+ 8fe:	ce 01       	movw	r24, r28
+ 900:	01 96       	adiw	r24, 0x01	; 1
+ 902:	0e 94 ee 01 	call	0x3dc	; 0x3dc <SPI_receiveByte>
+		if(data == SWITCH_PRESSED)
+ 906:	89 81       	ldd	r24, Y+1	; 0x01
+ 908:	81 30       	cpi	r24, 0x01	; 1
+ 90a:	29 f4       	brne	.+10     	; 0x916 <main+0x4e>
+		{
+			DIO_Pin_Write(PC3,HIGH); //Led on
+ 90c:	83 e1       	ldi	r24, 0x13	; 19
+ 90e:	61 e0       	ldi	r22, 0x01	; 1
+ 910:	0e 94 ac 03 	call	0x758	; 0x758 <DIO_Pin_Write>
+ 914:	f4 cf       	rjmp	.-24     	; 0x8fe <main+0x36>
+		}
+		else if(data == SWITCH_NOT_PRESSED)
+ 916:	89 81       	ldd	r24, Y+1	; 0x01
+ 918:	88 23       	and	r24, r24
+ 91a:	89 f7       	brne	.-30     	; 0x8fe <main+0x36>
+		{
+			DIO_Pin_Write(PC3,LOW); //Led off
+ 91c:	83 e1       	ldi	r24, 0x13	; 19
+ 91e:	60 e0       	ldi	r22, 0x00	; 0
+ 920:	0e 94 ac 03 	call	0x758	; 0x758 <DIO_Pin_Write>
+ 924:	ec cf       	rjmp	.-40     	; 0x8fe <main+0x36>
+
+00000926 <_exit>:
+ 926:	f8 94       	cli
+
+00000928 <__stop_program>:
+ 928:	ff cf       	rjmp	.-2      	; 0x928 <__stop_program>
